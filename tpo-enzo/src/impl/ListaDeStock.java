@@ -15,6 +15,8 @@ public class ListaDeStock implements ListaDeStockTDA {
         for (Stock S: listaDeStock) {
             if (S.codigoProducto == codigoProducto) return S;
         }
+
+        return null;
     }
 
     public void addProductStock(int codigoProducto, int stock, int stockMinimo) {
