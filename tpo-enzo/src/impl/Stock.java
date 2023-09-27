@@ -1,6 +1,8 @@
 package impl;
 
-public class Stock {
+import api.StockTDA;
+
+public class Stock implements StockTDA {
     int codigoProducto;
     int stock;
     int stockMinimo;

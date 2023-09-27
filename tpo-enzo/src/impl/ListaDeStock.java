@@ -1,8 +1,10 @@
 package impl;
 
+import api.ListaDeStockTDA;
+
 import java.util.ArrayList;
 
-public class ListaDeStock {
+public class ListaDeStock implements ListaDeStockTDA {
     private ArrayList<Stock> listaDeStock;
 
     ListaDeStock() {
