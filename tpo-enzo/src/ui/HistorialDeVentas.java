@@ -4,28 +4,30 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
-public class TablaDeProductos extends JFrame {
+public class HistorialDeVentas extends JFrame {
     private DefaultTableModel model;
 
-    public TablaDeProductos() {
-        setTitle("Tabla de Productos");
+    public HistorialDeVentas() {
+        setTitle("Historial de Venta");
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         this.model = new DefaultTableModel();
         model.addColumn("ID");
         model.addColumn("Descripción");
-        model.addColumn("Precio");
+        model.addColumn("Precio unitario");
+        model.addColumn("Cantidad");
+        model.addColumn("Total");
 
         JTable table = new JTable(this.model);
         JScrollPane scrollPane = new JScrollPane(table);
 
-        JButton addButton = new JButton("Agregar Producto");
-        JButton deleteButton = new JButton("Eliminar Producto");
+        JButton addSale = new JButton("Registrar Venta");
+        JButton deleteSale = new JButton("Eliminar Venta");
 
         JPanel panelBotones = new JPanel();
-        panelBotones.add(addButton);
-        panelBotones.add(deleteButton);
+        panelBotones.add(addSale);
+        panelBotones.add(deleteSale);
 
         Container contenido = getContentPane();
         contenido.setLayout(new BorderLayout());
