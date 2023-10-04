@@ -10,7 +10,7 @@ public class HistorialDeVentas extends JFrame {
     public HistorialDeVentas() {
         setTitle("Historial de Venta");
         setSize(600, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         this.model = new DefaultTableModel();
         model.addColumn("ID");
@@ -18,6 +18,11 @@ public class HistorialDeVentas extends JFrame {
         model.addColumn("Precio unitario");
         model.addColumn("Cantidad");
         model.addColumn("Total");
+        Object[] fila = { "ID-001", "Producto Ejemplo", 10.99, 3, 32.97 };
+        Object[] fila1 = { "ID-002", "Producto Ejemplo", 10.99, 5, 52.97 };
+
+        model.addRow(fila);
+        model.addRow(fila1);
 
         JTable table = new JTable(this.model);
         JScrollPane scrollPane = new JScrollPane(table);

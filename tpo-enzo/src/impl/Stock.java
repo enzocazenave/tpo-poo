@@ -7,7 +7,7 @@ public class Stock implements StockTDA {
     int stock;
     int stockMinimo;
 
-    Stock(int codigoProducto, int stock, int stockMinimo) {
+    public Stock(int codigoProducto, int stock, int stockMinimo) {
         this.codigoProducto = codigoProducto;
         this.stock = stock;
         this.stockMinimo = stockMinimo;

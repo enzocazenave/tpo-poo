@@ -10,7 +10,7 @@ public class TablaDeProductos extends JFrame {
     public TablaDeProductos() {
         setTitle("Tabla de Productos");
         setSize(600, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         this.model = new DefaultTableModel();
         model.addColumn("ID");

@@ -5,11 +5,7 @@ import api.ListaDeStockTDA;
 import java.util.ArrayList;
 
 public class ListaDeStock implements ListaDeStockTDA {
-    private ArrayList<Stock> listaDeStock;
-
-    ListaDeStock() {
-        this.listaDeStock = new ArrayList<Stock>();
-    }
+    private ArrayList<Stock> listaDeStock = new ArrayList<Stock>();
 
     public Stock getStockById(int codigoProducto) {
         for (Stock S: listaDeStock) {
