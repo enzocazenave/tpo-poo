@@ -2,12 +2,13 @@ package ui;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 
-public class TablaDeProductos {
+public class TablaDeProductosPorVenta {
 
     JPanel container;
 
-    public TablaDeProductos() {
+    public TablaDeProductosPorVenta() {
         container = new JPanel();
 
         DefaultTableModel tableModel = new DefaultTableModel() {
@@ -16,42 +17,50 @@ public class TablaDeProductos {
             }
         };
 
-        tableModel.addColumn("ID");
+        tableModel.addColumn("ID Producto");
         tableModel.addColumn("Nombre");
-        tableModel.addColumn("Precio");
-        tableModel.addColumn("Stock");
-        tableModel.addColumn("Estado");
+        tableModel.addColumn("Precio unitario");
+        tableModel.addColumn("Cantidad");
 
         JTable table = new JTable(tableModel);
-        tableModel.addRow(new Object[]{1, "iPhone X", 999.9, 5, true });
-        tableModel.addRow(new Object[]{2, "iPhone XR", 899.0, 6, true });
+        tableModel.addRow(new Object[]{1, "iPhone X", 999.9, 1});
+        tableModel.addRow(new Object[]{2, "iPhone XR", 699.9, 1});
 
         table.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         JScrollPane tableScrollPane = new JScrollPane(table);
 
         JPanel buttonsContainer = new JPanel();
-        JButton buttonAdd = new JButton("Agregar producto");
+        JButton buttonEdit = new JButton("Editar cantidad");
         JButton buttonDelete = new JButton("Eliminar producto");
-        buttonDelete.setToolTipText("Debes seleccionar un producto para realizar esta acción.");
+
+        buttonEdit.setToolTipText("Debes seleccionar una venta para realizar esta acción.");
+        buttonEdit.setEnabled(false);
+
+        buttonDelete.setToolTipText("Debes seleccionar una venta para realizar esta acción.");
         buttonDelete.setEnabled(false);
 
-        buttonDelete.addActionListener(e -> {
-            tableModel.removeRow(table.getSelectedRow());
+        buttonEdit.addActionListener(e -> {
+
         });
 
-        buttonsContainer.add(buttonAdd);
         buttonsContainer.add(buttonDelete);
+        buttonsContainer.add(buttonEdit);
 
         ListSelectionModel selectionModel = table.getSelectionModel();
         selectionModel.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
                 int selectedRow = table.getSelectedRow();
                 buttonDelete.setEnabled(selectedRow >= 0);
+                buttonEdit.setEnabled(selectedRow >= 0);
             }
         });
 
+        JLabel total = new JLabel("Total: 1.700 USD");
+
         container.add(tableScrollPane);
         container.add(buttonsContainer);
+        container.add(total);
+        container.setVisible(true);
     }
 }
