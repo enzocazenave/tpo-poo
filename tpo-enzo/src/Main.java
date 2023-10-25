@@ -1,15 +1,14 @@
-import ui.HistorialDeVentas;
-import ui.Menu;
+import ui.Layout;
 import ui.TablaDeProductos;
-
-import javax.swing.*;
+import ui.TablaDeProductosPorVenta;
+import ui.TablaDeVentas;
 
 public class Main {
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            TablaDeProductos productos = new TablaDeProductos();
-            HistorialDeVentas ventas = new HistorialDeVentas();
-            new Menu(ventas, productos);
-        });
+        TablaDeProductos productos = new TablaDeProductos();
+        TablaDeProductosPorVenta productosPorVenta = new TablaDeProductosPorVenta();
+        TablaDeVentas ventas = new TablaDeVentas(productosPorVenta);
+
+        new Layout(productos, ventas);
     }
 }
