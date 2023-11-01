@@ -10,6 +10,7 @@ public class TablaDeProductosPorVenta {
 
     public TablaDeProductosPorVenta() {
         container = new JPanel();
+        container.setLayout(new BorderLayout());
 
         DefaultTableModel tableModel = new DefaultTableModel() {
             public boolean isCellEditable(int row, int column) {
@@ -58,9 +59,10 @@ public class TablaDeProductosPorVenta {
 
         JLabel total = new JLabel("Total: 1.700 USD");
 
-        container.add(tableScrollPane);
-        container.add(buttonsContainer);
-        container.add(total);
+        container.add(tableScrollPane, BorderLayout.NORTH);
+        container.add(total, BorderLayout.CENTER);
+        container.add(buttonsContainer, BorderLayout.SOUTH);
+
         container.setVisible(true);
     }
 }

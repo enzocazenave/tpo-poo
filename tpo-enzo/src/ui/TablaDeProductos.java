@@ -1,16 +1,29 @@
 package ui;
 
+import impl.ListaDeProductos;
+import impl.ListaDeStock;
+import impl.Producto;
+import impl.Stock;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.util.UUID;
 
 public class TablaDeProductos {
 
     JPanel container;
+    DefaultTableModel tableModel;
+    ListaDeProductos listaDeProductos;
+    ListaDeStock listaDeStock;
 
-    public TablaDeProductos() {
+    public TablaDeProductos(ListaDeProductos listaDeProductos, ListaDeStock listaDeStock) {
+        this.listaDeProductos = listaDeProductos;
+        this.listaDeStock = listaDeStock;
         container = new JPanel();
+        container.setLayout(new BorderLayout());
 
-        DefaultTableModel tableModel = new DefaultTableModel() {
+        tableModel = new DefaultTableModel() {
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
@@ -20,11 +33,10 @@ public class TablaDeProductos {
         tableModel.addColumn("Nombre");
         tableModel.addColumn("Precio");
         tableModel.addColumn("Stock");
+        tableModel.addColumn("Stock minimo");
         tableModel.addColumn("Estado");
 
         JTable table = new JTable(tableModel);
-        tableModel.addRow(new Object[]{1, "iPhone X", 999.9, 5, true });
-        tableModel.addRow(new Object[]{2, "iPhone XR", 899.0, 6, true });
 
         table.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -36,8 +48,39 @@ public class TablaDeProductos {
         buttonDelete.setToolTipText("Debes seleccionar un producto para realizar esta acción.");
         buttonDelete.setEnabled(false);
 
+        buttonAdd.addActionListener(e -> {
+            JPanel inputPanel = new JPanel();
+            inputPanel.setLayout(new GridLayout(4,2));
+
+            JLabel label1 = new JLabel("Nombre:");
+            JTextField field1 = new JTextField(20);
+            JLabel label2 = new JLabel("Precio:");
+            JTextField field2 = new JTextField(20);
+            JLabel label3 = new JLabel("Cantidad:");
+            JTextField field3 = new JTextField(20);
+
+            JLabel label4 = new JLabel("Cantidad minima:");
+            JTextField field4 = new JTextField(20);
+
+            inputPanel.add(label1);
+            inputPanel.add(field1);
+            inputPanel.add(label2);
+            inputPanel.add(field2);
+            inputPanel.add(label3);
+            inputPanel.add(field3);
+            inputPanel.add(label4);
+            inputPanel.add(field4);
+
+            int result = JOptionPane.showConfirmDialog(JOptionPane.getFrameForComponent(container), inputPanel, "Agregar producto", JOptionPane.OK_CANCEL_OPTION);
+
+            if (result == JOptionPane.OK_OPTION) {
+                this.agregarProducto(field1.getText(), Double.parseDouble(field2.getText()), Integer.parseInt(field3.getText()), Integer.parseInt(field4.getText()));
+            }
+        });
+
         buttonDelete.addActionListener(e -> {
-            tableModel.removeRow(table.getSelectedRow());
+            UUID uuidSelected = (UUID) table.getValueAt(table.getSelectedRow(), 0);
+            this.eliminarProducto(uuidSelected, table.getSelectedRow());
         });
 
         buttonsContainer.add(buttonAdd);
@@ -51,7 +94,27 @@ public class TablaDeProductos {
             }
         });
 
-        container.add(tableScrollPane);
-        container.add(buttonsContainer);
+        container.add(tableScrollPane, BorderLayout.CENTER);
+        container.add(buttonsContainer, BorderLayout.SOUTH);
+
+        this.agregarProducto("iPhone X", 999.99,10, 2);
+        this.agregarProducto("iPhone 7", 599.99,5, 2);
+        this.agregarProducto("iPhone 5", 299.99,5, 2);
+    }
+
+    public void agregarProducto(String nombre, double precio, int cantidad, int cantidadMinima) {
+        UUID uuid = UUID.randomUUID();
+        Producto productoNuevo = new Producto(uuid, nombre, precio);
+        Stock productoStock = new Stock(uuid, cantidad, cantidadMinima);
+
+        this.listaDeProductos.agregarProducto(productoNuevo);
+        this.listaDeStock.addProductStock(productoStock);
+
+        this.tableModel.addRow(new Object[]{uuid, nombre, precio, cantidad, cantidadMinima, true});
+    }
+
+    public void eliminarProducto(UUID id, int selectedRow) {
+        tableModel.removeRow(selectedRow);
+        this.listaDeProductos.eliminarProducto(id);
     }
 }
