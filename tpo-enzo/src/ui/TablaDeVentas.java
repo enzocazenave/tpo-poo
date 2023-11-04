@@ -1,26 +1,31 @@
 package ui;
 
-import impl.ListaDeProductos;
-import impl.ListaDeStock;
-import impl.ListaDeVentas;
-import impl.Producto;
+import impl.*;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.UUID;
 
 public class TablaDeVentas {
 
     JPanel container;
     JTabbedPane menu;
+    ListaDeVentas listaDeVenta;
+    DefaultTableModel tableModel;
+
 
     public TablaDeVentas(TablaDeProductosPorVenta productosPorVenta, ListaDeVentas listaDeVentas, ListaDeProductos listaDeProductos, ListaDeStock listaDeStock) {
+        this.listaDeVenta = listaDeVentas;
+
         container = new JPanel();
         container.setLayout(new BorderLayout());
 
-        DefaultTableModel tableModel = new DefaultTableModel() {
+        tableModel = new DefaultTableModel() {
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
@@ -31,11 +36,8 @@ public class TablaDeVentas {
         tableModel.addColumn("Total");
 
         JTable table = new JTable(tableModel);
-        tableModel.addRow(new Object[]{1, "12/10/2023", 1999.9});
-        tableModel.addRow(new Object[]{2, "14/10/2023", 1999.9});
 
         table.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
 
         JScrollPane tableScrollPane = new JScrollPane(table);
 
@@ -61,6 +63,7 @@ public class TablaDeVentas {
         container.add(buttonsContainer, BorderLayout.SOUTH);
 
         buttonAdd.addActionListener(e -> {
+            ArrayList<ProductoSeleccionado> productosSeleccionados = new ArrayList<ProductoSeleccionado>();
             JPanel productsPanel = new JPanel();
             productsPanel.setLayout(new GridBagLayout());
 
@@ -86,6 +89,7 @@ public class TablaDeVentas {
 
             table.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
+            productsTableModel.addColumn("ID");
             productsTableModel.addColumn("Nombre");
             productsTableModel.addColumn("Precio");
             productsTableModel.addColumn("Stock");
@@ -95,6 +99,7 @@ public class TablaDeVentas {
 
             for (Producto p: listaDeProductos.getProductos()) {
                 productsTableModel.addRow(new Object[]{
+                        p.getCodigoProducto(),
                         p.getNombre(),
                         p.getPrecio(),
                         listaDeStock.getStockById(p.getCodigoProducto()).getStock()
@@ -108,14 +113,19 @@ public class TablaDeVentas {
 
             JButton addProductButton = new JButton("Agregar producto");
             JTextField productQtty = new JTextField(20);
+            double total = 0.0;
+            final double[] totalWrapper = { total };
+
+            JLabel totalMoney = new JLabel("Total: " + total + " ARS");
 
             String placeholder = "Cantidad";
             productQtty.setText(placeholder);
 
             addProductButton.addActionListener(e1 -> {
-                String nombre = (String) productsTable.getValueAt(productsTable.getSelectedRow(), 0);
-                double precio = (double) productsTable.getValueAt(productsTable.getSelectedRow(), 1);
-                int cantidadProducto = (int) productsTable.getValueAt(productsTable.getSelectedRow(), 2);
+                UUID codigo = (UUID) productsTable.getValueAt(productsTable.getSelectedRow(), 0);
+                String nombre = (String) productsTable.getValueAt(productsTable.getSelectedRow(), 1);
+                double precio = (double) productsTable.getValueAt(productsTable.getSelectedRow(), 2);
+                int cantidadProducto = (int) productsTable.getValueAt(productsTable.getSelectedRow(), 3);
                 String cantidadRequeridaField = productQtty.getText();
                 int cantidadRequerida;
 
@@ -131,8 +141,14 @@ public class TablaDeVentas {
                     return;
                 }
 
-                productsTableModel.setValueAt(cantidadProducto - cantidadRequerida, productsTable.getSelectedRow(), 2);
+                totalWrapper[0] += (precio * cantidadRequerida);
+
+                totalMoney.setText("Total: " + String.format("%.2f", totalWrapper[0]) + " ARS");
+                productsTableModel.setValueAt(cantidadProducto - cantidadRequerida, productsTable.getSelectedRow(), 3);
                 carritoTableModel.addRow(new Object[]{ nombre, precio, cantidadRequerida });
+
+                ProductoSeleccionado producto = new ProductoSeleccionado(listaDeProductos.getProductoById(codigo), cantidadRequerida);
+                productosSeleccionados.add(producto);
             });
 
             productQtty.addFocusListener(new FocusListener() {
@@ -158,16 +174,22 @@ public class TablaDeVentas {
 
             productsPanel.add(addProductButton, gbc);
             productsPanel.add(productQtty, gbc);
+            gbc.gridy = 3;
+
+            productsPanel.add(totalMoney, gbc);
 
             int result = JOptionPane.showConfirmDialog(JOptionPane.getFrameForComponent(container), productsPanel, "Registrar venta", JOptionPane.OK_CANCEL_OPTION);
 
             if (result == JOptionPane.OK_OPTION) {
+                this.agregarVenta(productosSeleccionados, 1);
             }
         });
 
         buttonGo.addActionListener(e -> {
-            String idVenta = table.getValueAt(table.getSelectedRow(), 0).toString();
-            menu.addTab("Venta " + idVenta, productosPorVenta.container);
+            UUID idVenta = (UUID) table.getValueAt(table.getSelectedRow(), 0);
+
+            menu.addTab("Venta " + idVenta.toString(), productosPorVenta.container);
+            productosPorVenta.setProducts(idVenta);
             menu.setSelectedIndex(2);
         });
 
@@ -177,8 +199,13 @@ public class TablaDeVentas {
         this.menu = menu;
     }
 
-    public void agregarVenta() {
-
+    public void agregarVenta(ArrayList<ProductoSeleccionado> productos, int metodo) {
+        UUID uuid = UUID.randomUUID();
+        Venta venta = new Venta(uuid, productos, metodo);
+        this.listaDeVenta.agregarVenta(venta);
+        SimpleDateFormat dateFormatted = new SimpleDateFormat("dd/MM/yyyy");
+        String date = dateFormatted.format(venta.getFecha());
+        this.tableModel.addRow(new Object[]{uuid, date, String.format("%.2f", venta.getTotal())});
     }
 
 }

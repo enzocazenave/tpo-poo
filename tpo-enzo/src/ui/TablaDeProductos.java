@@ -56,10 +56,10 @@ public class TablaDeProductos {
             JTextField field1 = new JTextField(20);
             JLabel label2 = new JLabel("Precio:");
             JTextField field2 = new JTextField(20);
-            JLabel label3 = new JLabel("Cantidad:");
+            JLabel label3 = new JLabel("Stock:");
             JTextField field3 = new JTextField(20);
 
-            JLabel label4 = new JLabel("Cantidad minima:");
+            JLabel label4 = new JLabel("Stock minimo:");
             JTextField field4 = new JTextField(20);
 
             inputPanel.add(label1);

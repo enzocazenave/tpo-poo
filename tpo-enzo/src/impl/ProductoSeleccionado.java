@@ -8,4 +8,12 @@ public class ProductoSeleccionado {
         this.producto = producto;
         this.cantidad = cantidad;
     }
+
+    public Producto getProducto() {
+        return producto;
+    }
+
+    public int getCantidad() {
+        return cantidad;
+    }
 }

@@ -1,18 +1,28 @@
 package ui;
 
+import impl.ListaDeVentas;
+import impl.ProductoSeleccionado;
+import impl.Venta;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.UUID;
 
 public class TablaDeProductosPorVenta {
 
     JPanel container;
+    ListaDeVentas listaDeVentas;
+    DefaultTableModel tableModel;
+    JLabel title;
 
-    public TablaDeProductosPorVenta() {
+    public TablaDeProductosPorVenta(ListaDeVentas listaDeVentas) {
+        this.listaDeVentas = listaDeVentas;
         container = new JPanel();
         container.setLayout(new BorderLayout());
 
-        DefaultTableModel tableModel = new DefaultTableModel() {
+        tableModel = new DefaultTableModel() {
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
@@ -24,8 +34,6 @@ public class TablaDeProductosPorVenta {
         tableModel.addColumn("Cantidad");
 
         JTable table = new JTable(tableModel);
-        tableModel.addRow(new Object[]{1, "iPhone X", 999.9, 1});
-        tableModel.addRow(new Object[]{2, "iPhone XR", 699.9, 1});
 
         table.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -57,12 +65,29 @@ public class TablaDeProductosPorVenta {
             }
         });
 
-        JLabel total = new JLabel("Total: 1.700 USD");
+        this.title = new JLabel("");
 
         container.add(tableScrollPane, BorderLayout.NORTH);
-        container.add(total, BorderLayout.CENTER);
+        container.add(this.title, BorderLayout.CENTER);
         container.add(buttonsContainer, BorderLayout.SOUTH);
 
         container.setVisible(true);
+    }
+
+    public void setProducts(UUID codigoVenta) {
+        Venta venta = listaDeVentas.getVentaById(codigoVenta);
+        ArrayList<ProductoSeleccionado> productosvendidos = venta.getProductos();
+        this.tableModel.setRowCount(0);
+
+        for (ProductoSeleccionado p: productosvendidos) {
+            this.tableModel.addRow(new Object[]{
+                    p.getProducto().getCodigoProducto(),
+                    p.getProducto().getNombre(),
+                    p.getProducto().getPrecio(),
+                    p.getCantidad()
+            });
+        }
+
+        this.title.setText("Total: " + String.format("%.2f", venta.getTotal()) + " ARS");
     }
 }

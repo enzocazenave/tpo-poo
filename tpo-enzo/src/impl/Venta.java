@@ -11,7 +11,6 @@ public class Venta {
     double total;
     ArrayList<ProductoSeleccionado> productos;
 
-
     public Venta(UUID codigoVenta, ArrayList<ProductoSeleccionado> productos, int metodoDePago) {
         this.codigoVenta = codigoVenta;
         this.fecha = new Date();
@@ -33,4 +32,23 @@ public class Venta {
         return new Credito().calcularCosto(total, 3);
     }
 
+    public UUID getCodigoVenta() {
+        return codigoVenta;
+    }
+
+    public int getMetodoDePago() {
+        return metodoDePago;
+    }
+
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public double getTotal() {
+        return total;
+    }
+
+    public ArrayList<ProductoSeleccionado> getProductos() {
+        return productos;
+    }
 }

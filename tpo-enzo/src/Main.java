@@ -13,7 +13,7 @@ public class Main {
         ListaDeVentas listaDeVentas = new ListaDeVentas();
 
         TablaDeProductos productos = new TablaDeProductos(listaDeProductos, listaDeStock);
-        TablaDeProductosPorVenta productosPorVenta = new TablaDeProductosPorVenta();
+        TablaDeProductosPorVenta productosPorVenta = new TablaDeProductosPorVenta(listaDeVentas);
         TablaDeVentas ventas = new TablaDeVentas(productosPorVenta, listaDeVentas, listaDeProductos, listaDeStock);
 
         new Layout(productos, ventas);
