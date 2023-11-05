@@ -15,6 +15,14 @@ public class Stock implements StockTDA {
         this.stockMinimo = stockMinimo;
     }
 
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
+
+    public void setStockMinimo(int stockMinimo) {
+        this.stockMinimo = stockMinimo;
+    }
+
     public void decrementStock(int stock) {
         int decrementQtty = this.stock - stock;
         if (decrementQtty <= 0) return;

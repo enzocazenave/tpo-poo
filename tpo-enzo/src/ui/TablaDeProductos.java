@@ -44,9 +44,12 @@ public class TablaDeProductos {
 
         JPanel buttonsContainer = new JPanel();
         JButton buttonAdd = new JButton("Agregar producto");
+        JButton buttonEdit = new JButton("Editar producto");
         JButton buttonDelete = new JButton("Eliminar producto");
         buttonDelete.setToolTipText("Debes seleccionar un producto para realizar esta acción.");
         buttonDelete.setEnabled(false);
+        buttonEdit.setToolTipText("Debes seleccionar un producto para realizar esta acción.");
+        buttonEdit.setEnabled(false);
 
         buttonAdd.addActionListener(e -> {
             JPanel inputPanel = new JPanel();
@@ -58,7 +61,6 @@ public class TablaDeProductos {
             JTextField field2 = new JTextField(20);
             JLabel label3 = new JLabel("Stock:");
             JTextField field3 = new JTextField(20);
-
             JLabel label4 = new JLabel("Stock minimo:");
             JTextField field4 = new JTextField(20);
 
@@ -78,12 +80,52 @@ public class TablaDeProductos {
             }
         });
 
+        buttonEdit.addActionListener(e -> {
+            UUID uuidSelected = (UUID) table.getValueAt(table.getSelectedRow(), 0);
+            Producto producto = listaDeProductos.getProductoById(uuidSelected);
+            Stock stock = listaDeStock.getStockById(uuidSelected);
+            JPanel inputPanel = new JPanel();
+            inputPanel.setLayout(new GridLayout(3,2));
+
+            JLabel label1 = new JLabel("Stock:");
+            JTextField field1 = new JTextField(20);
+            field1.setText("" + stock.getStock());
+
+            JLabel label2 = new JLabel("Stock Minimo:");
+            JTextField field2 = new JTextField(20);
+            field2.setText("" + stock.getStockMinimo());
+
+            String[] opciones = {String.valueOf(true), String.valueOf(false)};
+            JLabel label3 = new JLabel("Estado:");
+            JComboBox<String> selector = new JComboBox<>(opciones);
+
+            if (producto.isVisible()) selector.setSelectedIndex(0);
+            else selector.setSelectedIndex(1);
+
+            inputPanel.add(label1);
+            inputPanel.add(field1);
+            inputPanel.add(label2);
+            inputPanel.add(field2);
+            inputPanel.add(label3);
+            inputPanel.add(selector);
+
+            int result = JOptionPane.showConfirmDialog(JOptionPane.getFrameForComponent(container), inputPanel, "Editar producto", JOptionPane.OK_CANCEL_OPTION);
+
+            if (result == JOptionPane.OK_OPTION) {
+                producto.setVisible(selector.getSelectedItem() == "true");
+                stock.setStock(Integer.parseInt(field1.getText()));
+                stock.setStockMinimo(Integer.parseInt(field2.getText()));
+                this.renderAllProducts();
+            }
+        });
+
         buttonDelete.addActionListener(e -> {
             UUID uuidSelected = (UUID) table.getValueAt(table.getSelectedRow(), 0);
             this.eliminarProducto(uuidSelected, table.getSelectedRow());
         });
 
         buttonsContainer.add(buttonAdd);
+        buttonsContainer.add(buttonEdit);
         buttonsContainer.add(buttonDelete);
 
         ListSelectionModel selectionModel = table.getSelectionModel();
@@ -91,15 +133,22 @@ public class TablaDeProductos {
             if (!e.getValueIsAdjusting()) {
                 int selectedRow = table.getSelectedRow();
                 buttonDelete.setEnabled(selectedRow >= 0);
+                buttonEdit.setEnabled(selectedRow >= 0);
             }
         });
 
         container.add(tableScrollPane, BorderLayout.CENTER);
         container.add(buttonsContainer, BorderLayout.SOUTH);
 
-        this.agregarProducto("iPhone X", 999.99,10, 2);
-        this.agregarProducto("iPhone 7", 599.99,5, 2);
-        this.agregarProducto("iPhone 5", 299.99,5, 2);
+        this.renderAllProducts();
+    }
+
+    public void renderAllProducts() {
+        this.tableModel.setRowCount(0);
+        for (Producto p: listaDeProductos.getProductos()) {
+            Stock stock = listaDeStock.getStockById(p.getCodigoProducto());
+            this.tableModel.addRow(new Object[]{p.getCodigoProducto(), p.getNombre(), p.getPrecio(), stock.getStock(), stock.getStockMinimo(), p.isVisible()});
+        }
     }
 
     public void agregarProducto(String nombre, double precio, int cantidad, int cantidadMinima) {

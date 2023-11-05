@@ -1,6 +1,8 @@
 package impl;
 
-public class ProductoSeleccionado {
+import api.ProductoSeleccionadoTDA;
+
+public class ProductoSeleccionado implements ProductoSeleccionadoTDA {
     Producto producto;
     int cantidad;
 

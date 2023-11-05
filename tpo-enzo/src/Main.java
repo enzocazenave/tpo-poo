@@ -8,9 +8,9 @@ import ui.TablaDeVentas;
 
 public class Main {
     public static void main(String[] args) {
-        ListaDeProductos listaDeProductos = new ListaDeProductos();
         ListaDeStock listaDeStock = new ListaDeStock();
-        ListaDeVentas listaDeVentas = new ListaDeVentas();
+        ListaDeProductos listaDeProductos = new ListaDeProductos(listaDeStock);
+        ListaDeVentas listaDeVentas = new ListaDeVentas(listaDeStock);
 
         TablaDeProductos productos = new TablaDeProductos(listaDeProductos, listaDeStock);
         TablaDeProductosPorVenta productosPorVenta = new TablaDeProductosPorVenta(listaDeVentas);

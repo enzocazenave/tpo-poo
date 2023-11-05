@@ -1,10 +1,7 @@
 package impl;
 
-import java.util.ArrayList;
-
-public class Credito extends Pagos {
+public class Credito {
     public Credito() {
-        super();
     }
 
     public double calcularCosto(double total, int cuotas) {

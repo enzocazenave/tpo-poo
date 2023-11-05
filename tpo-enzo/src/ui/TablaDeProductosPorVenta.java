@@ -39,38 +39,10 @@ public class TablaDeProductosPorVenta {
 
         JScrollPane tableScrollPane = new JScrollPane(table);
 
-        JPanel buttonsContainer = new JPanel();
-        JButton buttonEdit = new JButton("Editar cantidad");
-        JButton buttonDelete = new JButton("Eliminar producto");
-
-        buttonEdit.setToolTipText("Debes seleccionar una venta para realizar esta acción.");
-        buttonEdit.setEnabled(false);
-
-        buttonDelete.setToolTipText("Debes seleccionar una venta para realizar esta acción.");
-        buttonDelete.setEnabled(false);
-
-        buttonEdit.addActionListener(e -> {
-
-        });
-
-        buttonsContainer.add(buttonDelete);
-        buttonsContainer.add(buttonEdit);
-
-        ListSelectionModel selectionModel = table.getSelectionModel();
-        selectionModel.addListSelectionListener(e -> {
-            if (!e.getValueIsAdjusting()) {
-                int selectedRow = table.getSelectedRow();
-                buttonDelete.setEnabled(selectedRow >= 0);
-                buttonEdit.setEnabled(selectedRow >= 0);
-            }
-        });
-
         this.title = new JLabel("");
 
         container.add(tableScrollPane, BorderLayout.NORTH);
         container.add(this.title, BorderLayout.CENTER);
-        container.add(buttonsContainer, BorderLayout.SOUTH);
-
         container.setVisible(true);
     }
 

@@ -98,12 +98,14 @@ public class TablaDeVentas {
             carritoTableModel.addColumn("Cantidad");
 
             for (Producto p: listaDeProductos.getProductos()) {
-                productsTableModel.addRow(new Object[]{
-                        p.getCodigoProducto(),
-                        p.getNombre(),
-                        p.getPrecio(),
-                        listaDeStock.getStockById(p.getCodigoProducto()).getStock()
-                });
+                if (p.isVisible()) {
+                    productsTableModel.addRow(new Object[]{
+                            p.getCodigoProducto(),
+                            p.getNombre(),
+                            p.getPrecio(),
+                            listaDeStock.getStockById(p.getCodigoProducto()).getStock()
+                    });
+                }
             }
 
             JLabel productosTableTitle = new JLabel("Productos");
@@ -164,6 +166,17 @@ public class TablaDeVentas {
                 }
             });
 
+            String[] opcionesMetodos = { "Efectivo", "Debito", "Credito" };
+            JComboBox<String> selectorMetodo = new JComboBox<>(opcionesMetodos);
+
+            String[] opcionesCuotas = { "2", "3", "6" };
+            JComboBox<String> selectorCuotas = new JComboBox<>(opcionesCuotas);
+            selectorCuotas.setVisible(false);
+
+            selectorMetodo.addActionListener(ev -> {
+                selectorCuotas.setVisible(selectorMetodo.getSelectedItem() == "Credito");
+            });
+
             productsPanel.add(productosTableTitle, gbc);
             productsPanel.add(carritoTableTitle, gbc);
             gbc.gridy = 1;
@@ -177,11 +190,19 @@ public class TablaDeVentas {
             gbc.gridy = 3;
 
             productsPanel.add(totalMoney, gbc);
+            gbc.gridy = 4;
+
+            productsPanel.add(selectorMetodo, gbc);
+            productsPanel.add(selectorCuotas, gbc);
 
             int result = JOptionPane.showConfirmDialog(JOptionPane.getFrameForComponent(container), productsPanel, "Registrar venta", JOptionPane.OK_CANCEL_OPTION);
 
             if (result == JOptionPane.OK_OPTION) {
-                this.agregarVenta(productosSeleccionados, 1);
+                this.agregarVenta(
+                        productosSeleccionados,
+                        selectorMetodo.getSelectedIndex(),
+                        (String) selectorCuotas.getSelectedItem()
+                );
             }
         });
 
@@ -199,9 +220,9 @@ public class TablaDeVentas {
         this.menu = menu;
     }
 
-    public void agregarVenta(ArrayList<ProductoSeleccionado> productos, int metodo) {
+    public void agregarVenta(ArrayList<ProductoSeleccionado> productos, int metodo, String cuotas) {
         UUID uuid = UUID.randomUUID();
-        Venta venta = new Venta(uuid, productos, metodo);
+        Venta venta = new Venta(uuid, productos, metodo, Integer.parseInt(cuotas));
         this.listaDeVenta.agregarVenta(venta);
         SimpleDateFormat dateFormatted = new SimpleDateFormat("dd/MM/yyyy");
         String date = dateFormatted.format(venta.getFecha());

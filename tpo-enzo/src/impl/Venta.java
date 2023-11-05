@@ -11,25 +11,27 @@ public class Venta {
     double total;
     ArrayList<ProductoSeleccionado> productos;
 
-    public Venta(UUID codigoVenta, ArrayList<ProductoSeleccionado> productos, int metodoDePago) {
+    public Venta(UUID codigoVenta, ArrayList<ProductoSeleccionado> productos, int metodoDePago, int cuotas) {
         this.codigoVenta = codigoVenta;
         this.fecha = new Date();
         this.metodoDePago = metodoDePago;
         this.productos = productos;
-        this.total = this.calcularCostoTotal(productos, metodoDePago);
+        this.total = this.calcularCostoTotal(productos, metodoDePago, cuotas);
     }
 
-    public double calcularCostoTotal(ArrayList<ProductoSeleccionado> productos, int metodoDePago) {
+    public double calcularCostoTotal(ArrayList<ProductoSeleccionado> productos, int metodoDePago, int cuotas) {
         double total = 0;
 
         for (ProductoSeleccionado p: productos) {
             total += p.producto.precio * p.cantidad;
         }
 
-        if (metodoDePago == 1) return new Efectivo().calcularCosto(total);
-        if (metodoDePago == 2) return new Debito().calcularCosto(total);
+        System.out.println(metodoDePago + " - " + cuotas);
 
-        return new Credito().calcularCosto(total, 3);
+        if (metodoDePago == 0) return new Efectivo().calcularCosto(total);
+        if (metodoDePago == 1) return new Debito().calcularCosto(total);
+
+        return new Credito().calcularCosto(total, cuotas);
     }
 
     public UUID getCodigoVenta() {

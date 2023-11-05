@@ -7,8 +7,22 @@ import java.util.UUID;
 
 public class ListaDeVentas implements ListaDeVentasTDA {
     ArrayList<Venta> listaDeVentas = new ArrayList<Venta>();
+    ListaDeStock listaDeStock;
+
+    public ListaDeVentas(ListaDeStock listaDeStock) {
+        this.listaDeStock = listaDeStock;
+    }
 
     public void agregarVenta(Venta V){
+        for (ProductoSeleccionado p: V.getProductos()) {
+            Stock stock = listaDeStock.getStockById(p.getProducto().getCodigoProducto());
+            stock.decrementStock(p.getCantidad());
+
+            if (stock.getStock() < stock.getStockMinimo()) {
+                p.getProducto().setVisible(false);
+            }
+        }
+
         this.listaDeVentas.add(V);
     }
 

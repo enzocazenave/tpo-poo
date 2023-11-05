@@ -20,6 +20,10 @@ public class Layout {
             if (tabbedPane.getSelectedIndex() != 2 && tabbedPane.getTabCount() > 2) {
                 tabbedPane.remove(2);
             }
+
+            if (tabbedPane.getSelectedIndex() == 0) {
+                productos.renderAllProducts();
+            }
         });
 
         ventas.setMenu(tabbedPane);
