@@ -6,7 +6,7 @@ import javax.swing.event.ChangeListener;
 
 public class Layout {
     public Layout(TablaDeProductos productos, TablaDeVentas ventas) {
-        JFrame frame = new JFrame("Gestor de ventas y stock.");
+        JFrame frame = new JFrame("Gestor de ventas y stock");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1000,700);
         frame.setResizable(false);

@@ -25,7 +25,7 @@ public class Stock implements StockTDA {
 
     public void decrementStock(int stock) {
         int decrementQtty = this.stock - stock;
-        if (decrementQtty <= 0) return;
+        if (decrementQtty < 0) return;
         this.stock = decrementQtty;
     }
 

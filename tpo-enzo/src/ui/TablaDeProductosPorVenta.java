@@ -16,6 +16,7 @@ public class TablaDeProductosPorVenta {
     ListaDeVentas listaDeVentas;
     DefaultTableModel tableModel;
     JLabel title;
+    JLabel method;
 
     public TablaDeProductosPorVenta(ListaDeVentas listaDeVentas) {
         this.listaDeVentas = listaDeVentas;
@@ -40,9 +41,11 @@ public class TablaDeProductosPorVenta {
         JScrollPane tableScrollPane = new JScrollPane(table);
 
         this.title = new JLabel("");
+        this.method = new JLabel("");
 
         container.add(tableScrollPane, BorderLayout.NORTH);
         container.add(this.title, BorderLayout.CENTER);
+        container.add(this.method, BorderLayout.AFTER_LAST_LINE);
         container.setVisible(true);
     }
 
@@ -61,5 +64,7 @@ public class TablaDeProductosPorVenta {
         }
 
         this.title.setText("Total: " + String.format("%.2f", venta.getTotal()) + " ARS");
+        String[] options = { "Efectivo", "Debito", "Credito" };
+        this.method.setText("Método de pago: " + options[venta.getMetodoDePago()]);
     }
 }

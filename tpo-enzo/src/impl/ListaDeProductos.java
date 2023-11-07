@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 public class ListaDeProductos implements ListaDeProductosTDA {
-    ArrayList<Producto> listaDeProductos = new ArrayList<Producto>();
+    ArrayList<Producto> listaDeProductos = new ArrayList<>();
 
     public ListaDeProductos(ListaDeStock listaDeStock) {
         UUID uuid1 = UUID.randomUUID();
