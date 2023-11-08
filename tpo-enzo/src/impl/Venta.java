@@ -10,12 +10,14 @@ public class Venta {
     Date fecha;
     double total;
     ArrayList<ProductoSeleccionado> productos;
+    int cuotas;
 
     public Venta(UUID codigoVenta, ArrayList<ProductoSeleccionado> productos, int metodoDePago, int cuotas) {
         this.codigoVenta = codigoVenta;
         this.fecha = new Date();
         this.metodoDePago = metodoDePago;
         this.productos = productos;
+        this.cuotas = cuotas;
         this.total = this.calcularCostoTotal(productos, metodoDePago, cuotas);
     }
 
@@ -25,8 +27,6 @@ public class Venta {
         for (ProductoSeleccionado p: productos) {
             total += p.producto.precio * p.cantidad;
         }
-
-        System.out.println(metodoDePago + " - " + cuotas);
 
         if (metodoDePago == 0) return new Efectivo().calcularCosto(total);
         if (metodoDePago == 1) return new Debito().calcularCosto(total);
@@ -52,5 +52,9 @@ public class Venta {
 
     public ArrayList<ProductoSeleccionado> getProductos() {
         return productos;
+    }
+
+    public int getCuotas() {
+        return cuotas;
     }
 }

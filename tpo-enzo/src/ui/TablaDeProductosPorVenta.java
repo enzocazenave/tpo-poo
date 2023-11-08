@@ -17,6 +17,7 @@ public class TablaDeProductosPorVenta {
     DefaultTableModel tableModel;
     JLabel title;
     JLabel method;
+    JLabel cuotas;
 
     public TablaDeProductosPorVenta(ListaDeVentas listaDeVentas) {
         this.listaDeVentas = listaDeVentas;
@@ -45,8 +46,7 @@ public class TablaDeProductosPorVenta {
 
         container.add(tableScrollPane, BorderLayout.NORTH);
         container.add(this.title, BorderLayout.CENTER);
-        container.add(this.method, BorderLayout.AFTER_LAST_LINE);
-        container.setVisible(true);
+        container.add(this.method, BorderLayout.SOUTH);
     }
 
     public void setProducts(UUID codigoVenta) {
@@ -66,5 +66,10 @@ public class TablaDeProductosPorVenta {
         this.title.setText("Total: " + String.format("%.2f", venta.getTotal()) + " ARS");
         String[] options = { "Efectivo", "Debito", "Credito" };
         this.method.setText("Método de pago: " + options[venta.getMetodoDePago()]);
+
+        if (venta.getMetodoDePago() == 2) {
+            this.method.setText("Método de pago: " + options[venta.getMetodoDePago()] + " | Cuotas: " + venta.getCuotas() + " x " + String.format("%.2f", (venta.getTotal() / venta.getCuotas())) + " ARS");
+        }
+
     }
 }
